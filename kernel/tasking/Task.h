@@ -35,7 +35,7 @@ struct Task
     Path *directory;
 
     List *memory_mapping;
-    PageDirectory *page_directory;
+    void *address_space;
 
     int exit_value;
 
@@ -59,9 +59,9 @@ int task_count();
 
 Task *task_spawn(Task *parent, const char *name, TaskEntryPoint entry, void *arg, bool user);
 
-Task *task_spawn_with_argv(Task *parent, const char *name, TaskEntryPoint entry, const char **argv, bool user);
-
 void task_set_entry(Task *task, TaskEntryPoint entry, bool user);
+
+void task_pass_argv_argc(Task *task, const char **argv);
 
 uintptr_t task_kernel_stack_push(Task *task, const void *value, size_t size);
 

@@ -12,6 +12,7 @@
 </p>
 
 # skiftOS
+![Deploy](https://github.com/skiftOS/skift/workflows/Deploy/badge.svg?branch=master)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/skiftOS/skift?include_prereleases)
 ![GitHub last commit](https://img.shields.io/github/last-commit/skiftOS/skift)
 ![GitHub issues](https://img.shields.io/github/issues-raw/skiftOS/skift)
@@ -51,4 +52,4 @@ Running on real hardware (Thinkpad x250)
 
 The skift operating system and its core components are licensed under the **MIT License**.
 
-See: [LICENSE.md](https://github.com/skiftOS/skift/blob/master/LICENSE.md)
+See: [LICENSE.md](./license.md)

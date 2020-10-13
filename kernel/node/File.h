@@ -5,14 +5,20 @@
 class FsFile : public FsNode
 {
 private:
-public:
     char *_buffer;
     size_t _buffer_allocated;
     size_t _buffer_size;
 
+public:
     FsFile();
 
-    ResultOr<size_t> read(FsHandle &handle, void *buffer, size_t size);
+    ~FsFile() override;
 
-    ResultOr<size_t> write(FsHandle &handle, const void *buffer, size_t size);
+    Result open(FsHandle *handle) override;
+
+    size_t size() override;
+
+    ResultOr<size_t> read(FsHandle &handle, void *buffer, size_t size) override;
+
+    ResultOr<size_t> write(FsHandle &handle, const void *buffer, size_t size) override;
 };

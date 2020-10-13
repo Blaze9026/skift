@@ -1,8 +1,10 @@
 UTILS = \
 	__TESTEXEC \
 	__TESTTERM \
+	BASENAME \
 	CAT \
 	CLEAR \
+	CP \
 	DSTART \
 	ECHO \
 	GREP \
@@ -14,6 +16,7 @@ UTILS = \
 	MAN \
 	MARKUP \
 	MKDIR \
+	RMDIR \
 	MV \
 	NOW \
 	OPEN \
@@ -22,7 +25,12 @@ UTILS = \
 	TOUCH \
 	UNLINK \
 	UPTIME \
-	LINK 
+	LINK  \
+	UNAME \
+	TRUE \
+	FALSE \
+	YES \
+	PWD
 
 __TESTEXEC_LIBS =
 __TESTEXEC_NAME = __testexec
@@ -30,11 +38,17 @@ __TESTEXEC_NAME = __testexec
 __TESTTERM_LIBS =
 __TESTTERM_NAME = __testterm
 
+BASENAME_LIBS = 
+BASENAME_NAME = basename
+
 CAT_LIBS =
 CAT_NAME = cat
 
 CLEAR_LIBS =
 CLEAR_NAME = clear
+
+CP_LIBS = 
+CP_NAME = cp
 
 DSTART_LIBS =
 DSTART_NAME = dstart
@@ -72,6 +86,9 @@ MARKUP_NAME = markup
 MKDIR_LIBS =
 MKDIR_NAME = mkdir
 
+RMDIR_LIBS =
+RMDIR_NAME = rmdir
+
 MV_LIBS =
 MV_NAME = mv
 
@@ -95,6 +112,21 @@ UNLINK_NAME = unlink
 
 UPTIME_LIBS =
 UPTIME_NAME = uptime
+
+UNAME_LIBS = 
+UNAME_NAME = uname
+
+TRUE_LIBS = 
+TRUE_NAME = true
+
+FALSE_LIBS = 
+FALSE_NAME = false
+
+YES_LIBS = 
+YES_NAME = yes
+
+PWD_LIBS = 
+PWD_NAME = pwd
 
 define UTIL_TEMPLATE =
 

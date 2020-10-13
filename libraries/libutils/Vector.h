@@ -158,7 +158,7 @@ public:
 
         while (new_capacity <= capacity)
         {
-            new_capacity *= 1.25;
+            new_capacity += new_capacity / 4;
         }
 
         T *new_storage = reinterpret_cast<T *>(calloc(new_capacity, sizeof(T)));
@@ -179,7 +179,7 @@ public:
     {
         if (_count + 1 >= _capacity)
         {
-            size_t new_capacity = _capacity * 1.25;
+            size_t new_capacity = _capacity + _capacity / 4;
             T *new_storage = reinterpret_cast<T *>(calloc(new_capacity, sizeof(T)));
 
             for (size_t i = 0; i < _count; i++)
@@ -199,9 +199,10 @@ public:
     {
         _count--;
 
-        if (MAX(_count, 16) < _capacity * 0.75)
+        size_t new_capacity = _capacity - _capacity / 4;
+
+        if (MAX(_count, 16) < new_capacity)
         {
-            size_t new_capacity = _capacity * 0.75;
             T *new_storage = reinterpret_cast<T *>(calloc(new_capacity, sizeof(T)));
 
             for (size_t i = 0; i < _count; i++)
@@ -215,7 +216,7 @@ public:
         }
     }
 
-    void insert(size_t index, T value)
+    T &insert(size_t index, T value)
     {
         assert(index <= _count);
 
@@ -227,6 +228,8 @@ public:
         }
 
         new (&_storage[index]) T(move(value));
+
+        return _storage[index];
     }
 
     void insert_sorted(T value)
@@ -315,19 +318,19 @@ public:
     {
         assert(index < _count);
 
-        T copy = _storage[index];
+        T copy = move(_storage[index]);
         remove_index(index);
         return copy;
     }
 
-    void push(T value)
+    T &push(T value)
     {
-        insert(0, value);
+        return insert(0, value);
     }
 
-    void push_back(T value)
+    T &push_back(T value)
     {
-        insert(_count, value);
+        return insert(_count, value);
     }
 
     void push_back_many(Vector<T> &values)

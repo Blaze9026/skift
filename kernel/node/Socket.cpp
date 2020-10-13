@@ -3,33 +3,9 @@
 #include "kernel/node/Connection.h"
 #include "kernel/node/Socket.h"
 
-static FsNode *socket_openConnection(FsSocket *socket)
+FsSocket::FsSocket() : FsNode(FILE_TYPE_SOCKET)
 {
-    FsNode *connection = new FsConnection();
-
-    list_pushback(socket->pending, connection->ref());
-
-    return connection;
-}
-
-static bool socket_FsNodeCanAcceptConnectionCallback(FsSocket *socket)
-{
-    return socket->pending->any();
-}
-
-static FsNode *socket_FsNodeAcceptConnectionCallback(FsSocket *socket)
-{
-    assert(socket->pending->any());
-
-    FsNode *connection;
-    list_pop(socket->pending, (void **)&connection);
-
-    if (connection->accept)
-    {
-        connection->accept(connection);
-    }
-
-    return connection;
+    _pending = list_create();
 }
 
 static void deref_connection(FsNode *node)
@@ -37,17 +13,32 @@ static void deref_connection(FsNode *node)
     node->deref();
 }
 
-static void socket_destroy(FsSocket *socket)
+FsSocket::~FsSocket()
 {
-    list_destroy_with_callback(socket->pending, (ListDestroyElementCallback)deref_connection);
+    list_destroy_with_callback(_pending, (ListDestroyElementCallback)deref_connection);
 }
 
-FsSocket::FsSocket() : FsNode(FILE_TYPE_SOCKET)
+ResultOr<FsNode *> FsSocket::connect()
 {
-    open_connection = (FsNodeOpenConnectionCallback)socket_openConnection;
-    can_accept_connection = (FsNodeCanAcceptConnectionCallback)socket_FsNodeCanAcceptConnectionCallback;
-    accept_connection = (FsNodeAcceptConnectionCallback)socket_FsNodeAcceptConnectionCallback;
-    destroy = (FsNodeDestroyCallback)socket_destroy;
+    FsNode *connection = new FsConnection();
 
-    pending = list_create();
+    connection->ref();
+    list_pushback(_pending, connection);
+
+    return connection;
+}
+
+bool FsSocket::can_accept()
+{
+    return _pending->any();
+}
+
+ResultOr<FsNode *> FsSocket::accept()
+{
+    assert(_pending->any());
+
+    FsNode *connection;
+    list_pop(_pending, (void **)&connection);
+    connection->accepted();
+    return connection;
 }

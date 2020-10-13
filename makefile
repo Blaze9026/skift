@@ -3,6 +3,7 @@
 
 export PATH := $(shell toolchain/use-it.sh):$(PATH)
 export PATH := $(shell toolbox/use-it.sh):$(PATH)
+export LC_ALL=C
 
 ifeq (, $(shell which inkscape))
 $(error "No inkscape in PATH, consider installing it")
@@ -22,10 +23,11 @@ BUILD_TARGET=$(BUILD_CONFIG)-$(BUILD_ARCH)-$(BUILD_SYSTEM)
 BUILD_GITREF=$(shell git rev-parse --abbrev-ref HEAD || echo unknown)@$(shell git rev-parse --short HEAD || echo unknown)
 BUILD_UNAME=$(shell uname -s -o -m -r)
 BUILD_DIRECTORY=$(shell pwd)/build
+ASSETS_DIRECTORY=$(shell pwd)/disks
 
 SYSROOT=$(BUILD_DIRECTORY)/sysroot
-BOOTROOT=$(BUILD_DIRECTORY)/bootroot
-BOOTDISK=$(BUILD_DIRECTORY)/bootdisk.img
+BOOTROOT=$(BUILD_DIRECTORY)/bootroot-$(BUILD_LOADER)-$(BUILD_ARCH)
+BOOTDISK=$(ASSETS_DIRECTORY)/bootdisk-$(BUILD_LOADER)-$(BUILD_ARCH).img
 
 RAMDISK=$(BUILD_DIRECTORY)/ramdisk.tar
 
@@ -85,9 +87,10 @@ ARFLAGS:=rcs
 AS=nasm
 ASFLAGS=-f elf32
 
+include arch/.build.mk
+
 include thirdparty/.build.mk
 include protocols/.build.mk
-include arch/.build.mk
 include kernel/.build.mk
 include libraries/.build.mk
 include applications/.build.mk
